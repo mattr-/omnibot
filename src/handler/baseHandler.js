@@ -2,7 +2,7 @@
 import { BaseService } from '../core/baseService';
 import { CommandData } from '../model/commandData';
 import { Message } from '../model/message';
-import { includes, isEmpty, intersection } from 'lodash';
+import { get, includes, isEmpty, intersection } from 'lodash';
 
 export class BaseHandler extends BaseService {
   /**
@@ -15,7 +15,9 @@ export class BaseHandler extends BaseService {
     const message = await channel.fetchMessage(msg.dataValues.id);
 
     const isCommand = includes(this.options.commands, cmd.dataValues.name);
-    const isAllowed = !isEmpty(intersection(this.options.roles, message.member.roles.map((role) => role.name))) || isEmpty(this.options.roles) || this.options.roles === undefined;
+    const isAllowed = get(this, 'options.roles', undefined) && get(message, 'member.roles', undefined) && (
+      !isEmpty(intersection(this.options.roles, message.member.roles.map((role) => role.name))) ||
+      isEmpty(this.options.roles) );
 
     return isCommand && isAllowed;
   }
@@ -31,7 +33,7 @@ export class BaseHandler extends BaseService {
   }
 
   /**
-   * Gets command data by key 
+   * Gets command data by key
    * @param {*} cmd command to find data for
    * @param {*} key command data key
    */
