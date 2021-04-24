@@ -9,7 +9,6 @@ export class Bot {
     this.logger = logger;
     this.logger.debug('Creating bot.');
 
-    this.raw = new Subject();
     this.commands = new Subject();
     this.incoming = new Subject();
     this.reactionAdd = new Subject();
@@ -42,15 +41,12 @@ export class Bot {
       this.logger.error(err, 'bot stream did not handle error');
     };
 
-    this.raw.subscribe((next) => this.handleRaw(next).catch(streamError));
     this.commands.subscribe((next) => this.handleCommand(next).catch(streamError));
     this.incoming.subscribe((next) => this.handleIncoming(next).catch(streamError));
     this.reactionAdd.subscribe((next) => this.handleMessageReactionAdd(next).catch(streamError));
     this.reactionRemove.subscribe((next) => this.handleMessageReactionRemove(next).catch(streamError));
     this.userfeed.subscribe((next) => this.handleUserFeed(next).catch(streamError));
 
-
-    this.client.on('raw', (packet) => this.raw.next(packet));
     this.client.on('ready', () => this.logger.debug('Discord listener is ready'));
     this.client.on('message', (input) => this.convertMessage(input).then((msg) => this.incoming.next(msg)));
     this.client.on('messageReactionAdd', (msgReaction, user) => this.reactionAdd.next({ msgReaction, user }));
@@ -70,14 +66,12 @@ export class Bot {
    * Stops the bot, completes the observables, removes event listeners.
    */
   async stop() {
-    this.raw.complete();
     this.commands.complete();
     this.incoming.complete();
     this.reactionAdd.complete();
     this.reactionRemove.complete();
     this.userfeed.complete();
 
-    this.client.removeAllListeners('raw');
     this.client.removeAllListeners('ready');
     this.client.removeAllListeners('message');
     this.client.removeAllListeners('messageReactionAdd');
@@ -141,29 +135,6 @@ export class Bot {
     });
 
     this.logger.debug({ cmd }, 'Command was not handled');
-  }
-
-  async handleRaw(packet) {
-    if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
-
-    const channel = this.client.channels.get(packet.d.channel_id);
-    if (channel.messages.has(packet.d.message_id)) return;
-
-    const message = await channel.fetchMessage(packet.d.message_id);
-    const user = await this.client.fetchUser(packet.d.user_id);
-    const msgReaction = {
-      emoji: packet.d.emoji,
-      message
-    };
-
-    switch (packet.t) {
-      case 'MESSAGE_REACTION_ADD':
-        this.reactionAdd.next({ msgReaction, user });
-        break;
-      case 'MESSAGE_REACTION_REMOVE':
-        this.reactionRemove.next({ msgReaction, user });
-        break;
-    }
   }
 
   async handleMessageReactionAdd(reaction) {
