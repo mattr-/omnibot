@@ -68,6 +68,7 @@ handlers:
       - 'customcommands'
       - 'removecommand'
     roles:
+      - 'Bot Developer'
       - 'Administrator'
       - 'Owner'
   confessionHandler:
@@ -93,7 +94,7 @@ handlers:
       - 'Owner'
   echoHandler:
     name: 'echoHandler'
-    commands: 
+    commands:
       - 'echo'
   helpHandler:
     name: 'helpHandler'
@@ -197,7 +198,7 @@ handlers:
       - 'Owner'
   sedHandler:
     name: 'sedHandler'
-    ignore: 
+    ignore:
       - '580365552950706177'
       - '591273465689145355'
     commands:
@@ -211,7 +212,7 @@ handlers:
       - 'Owner'
   urbanHandler:
     name: 'urbanHandler'
-    commands: 
+    commands:
       - 'urban'
   userActionHandler:
     name: 'userActionHandler'
