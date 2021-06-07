@@ -12,6 +12,6 @@ export class Warning extends Model {
         primaryKey: true,
         unique: true
       },
-    }, { tableName: 'Warning', sequelize });
+    }, { createdAt: 'created_at', updatedAt: 'updated_at', tableName: 'warning', sequelize });
   }
 }

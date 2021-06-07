@@ -11,6 +11,6 @@ export class Birthday extends Model {
         primaryKey: true,
         unique: true
       },
-    }, { tableName: 'Birthday', sequelize });
+    }, { createdAt: 'created_at', updatedAt: 'updated_at', tableName: 'birthday', sequelize });
   }
 }

@@ -14,7 +14,7 @@ export class Message extends Model {
         unique: true
       },
       reactions: DataTypes.ARRAY(DataTypes.STRING)
-    }, { tableName: 'Message', sequelize });
+    }, { createdAt: 'created_at', updatedAt: 'updated_at', tableName: 'message', sequelize });
   }
 
   static associate(models) {

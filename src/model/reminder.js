@@ -15,7 +15,7 @@ export class Reminder extends Model {
         primaryKey: true,
         unique: true
       },
-    }, { tableName: 'Reminder', sequelize });
+    }, { createdAt: 'createdAt', updatedAt: 'updated_at', tableName: 'reminder', sequelize });
   }
 
   static async beforeCreate(instance) {

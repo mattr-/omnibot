@@ -19,6 +19,6 @@ export class CustomCommand extends Model {
         type: DataTypes.STRING,
         allowNull: false,
       }
-    }, { tableName: 'CustomCommand', sequelize });
+    }, { createdAt: 'created_at', updatedAt: 'updated_at', tableName: 'custom_command', sequelize });
   }
 }

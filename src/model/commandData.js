@@ -12,7 +12,7 @@ export class CommandData extends Model {
       },
       key: DataTypes.STRING,
       value: DataTypes.STRING
-    }, { tableName: 'CommandData', sequelize });
+    }, { createdAt: 'created_at', updatedAt: 'updated_at', tableName: 'command_data', sequelize });
   }
 
   static associate(models) {

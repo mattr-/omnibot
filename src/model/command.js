@@ -11,7 +11,7 @@ export class Command extends Model {
         unique: true
       },
       name: DataTypes.STRING
-    }, { tableName: 'Command', sequelize });
+    }, { createdAt: 'created_at', updatedAt: 'updated_at', tableName: 'command', sequelize });
   }
 
   static associate(models) {
